@@ -68,6 +68,7 @@ import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.ServerGetPlayerEvent;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -621,7 +622,9 @@ public class BungeeCord extends ProxyServer
         connectionLock.readLock().lock();
         try
         {
-            return connections.get( name );
+            ServerGetPlayerEvent event = new ServerGetPlayerEvent( name );
+            pluginManager.callEvent( event );
+            return connections.get( event.getPlayerName() );
         } finally
         {
             connectionLock.readLock().unlock();
